@@ -16,3 +16,6 @@ Release
 *.ncb
 *.suo
 *.sdf
+
+# Mac ignores
+.DS_Store

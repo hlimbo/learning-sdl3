@@ -17,4 +17,4 @@ add_subdirectory(
 add_executable(hello-mac MACOSX_BUNDLE hello.c)
 
 # Link to the actual SDL3 library.
-target_link_libraries(hello-windows PRIVATE SDL3::SDL3)
+target_link_libraries(hello-mac PRIVATE SDL3::SDL3)
