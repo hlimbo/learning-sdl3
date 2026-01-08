@@ -81,3 +81,23 @@ else()
 
 endif()
 
+#######################################################
+#                                                     #
+#            Shareable Builds Section                 #    
+#                                                     #
+#######################################################
+# on command line can enter commands such as:
+# cmake --build platform_builds/windows --config Release
+
+install(TARGETS ${APP_NAME}
+        RUNTIME DESTINATION .
+        BUNDLE DESTINATION .)
+
+if(WIN32)
+  # install DLL next to EXE
+  install(FILES "${SDL3_PATH}/SDL3.dll" DESTINATION .)
+elseif(APPLE)
+  # For Mac, we usually put dylibs in a Frameworks folder, 
+  # but for a simple setup, next to the binary works too.
+  install(FILES "${SDL3_PATH}/lib/libSDL3.dylib" DESTINATION .) 
+endif()

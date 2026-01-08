@@ -1,6 +1,7 @@
 # CMake Output Builds per platform
 ./platform_builds/windows/*
 ./platform_builds/mac/*
+./dist/*
 
 # CMake Ignores
 cmake_install.cmake
@@ -22,3 +23,5 @@ Release
 # Mac ignores
 .DS_Store
 *.app
+
+install_manifest.txt

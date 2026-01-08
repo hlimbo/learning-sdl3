@@ -49,12 +49,24 @@ cmake -S . -B platform_builds/windows
 
 2. Build CMake Project
 ```bash
-cmake --build platform_builds/windows
+# debug builds
+cmake --build platform_builds/windows --config Debug
+# release builds
+cmake --build platform_builds/windows --config Release
 ```
 
 3. If build succeeded, hello world app should be located in:
 ```
 platform_builds/windows/Debug/hello-windows.exe
+```
+
+4. To package up in a easy to distribute fashion. CMake can transfer what was built using Step 2 into `./dist/debug` and `./debug/release` folders respectively in the root directory of this project. The commands for each one are as follows:
+```bash
+# debug - creates a dist/debug folder containing the game's .exe
+cmake --install platform_builds/windows --prefix "./dist/debug" --config Debug
+
+# release - creates a dist/release folder containing the game's .exe
+cmake --install platform_builds/windows --prefix "./dist/release" --config Release
 ```
 
 ## Commands to run when in the `vendored/SDL` directory on command line
