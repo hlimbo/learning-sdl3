@@ -1,0 +1,18 @@
+mac/build/**
+windows/build/**
+
+# CMake Ignores
+cmake_install.cmake
+CMakeCache.txt
+
+# Visual Studio ignores
+*.vcxproj
+*.vcxproj.filters
+*.sln
+.vs
+Debug
+Release
+*.user
+*.ncb
+*.suo
+*.sdf
