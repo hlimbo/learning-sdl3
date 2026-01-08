@@ -26,17 +26,17 @@ Example Output:
 
 1. Configure CMake
 ```bash
-cmake -S . -B mac/build
+cmake -S . -B platform_builds/mac
 ```
 
 2. Build CMake Project
 ```bash
-cmake --build mac/build
+cmake --build platform_builds/mac
 ```
 
 3. If the build is good, you should see the app in:
 ```
-mac/build/hello-mac.app
+platform_builds/mac/hello-mac.app
 ```
 
 Can run the project by opening the `build` folder in Finder and double clicking on `hello-mac` to open the hello world program
@@ -44,17 +44,17 @@ Can run the project by opening the `build` folder in Finder and double clicking 
 ### Build SDL3 from source - Windows
 1. Configure CMake
 ```bash
-cmake -S . -B windows/build
+cmake -S . -B platform_builds/windows
 ```
 
 2. Build CMake Project
 ```bash
-cmake --build windows/build
+cmake --build platform_builds/windows
 ```
 
 3. If build succeeded, hello world app should be located in:
 ```
-windows/build/Debug/hello-windows.exe
+platform_builds/windows/Debug/hello-windows.exe
 ```
 
 ## Commands to run when in the `vendored/SDL` directory on command line
@@ -66,7 +66,9 @@ cmake -S . -B build -D SDL_EXAMPLES=ON
 cmake --build build
 ```
 
-* If build is good, you should find the `.exe` files in the following locations:
+* If build is good:
+  * you should see the examples built in the `vendored/SDL/build/examples` folder listed below
+  * you should be able to obtain the `SDL3.dll` and `SDL3.lib` files in `vendored/SDL/build/Debug` on *Windows*
 
 #### Windows Executables Location
 ```bash
