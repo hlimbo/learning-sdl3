@@ -26,7 +26,7 @@ Example Output:
 
 1. Configure CMake
 ```bash
-cmake -S . -B build/build
+cmake -S . -B mac/build
 ```
 
 2. Build CMake Project
@@ -52,11 +52,7 @@ cmake -S . -B windows/build
 cmake --build windows/build
 ```
 
-3. If build is successful, you should find `SDL3.dll` located in
-```
-vendored/SDL/build/debug/SDL3.dll
-```
-4. For the hello world app, it should be located in
+3. If build succeeded, hello world app should be located in:
 ```
 windows/build/Debug/hello-windows.exe
 ```
@@ -76,6 +72,12 @@ cmake --build build
 ```bash
 # applications should end in .exe
 vendored/SDL/build/examples/Debug
+```
+
+#### Windows SDL3.dll file
+**Note** this file should be in the same folder as your executable. Otherwise, you will see an error and the game won't start.
+```
+vendored/SDL/build/debug/SDL3.dll
 ```
 
 #### Mac Executables Location

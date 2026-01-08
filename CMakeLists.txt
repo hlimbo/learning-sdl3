@@ -8,7 +8,7 @@ if(APPLE)
   set(EXECUTABLE_TARGET "MACOSX_BUNDLE")
 elseif(WIN32)
   set(APP_NAME "hello-windows")
-  set(EXECUTABLE_TARGET "WIN32_EXECUTABLE")
+  set(EXECUTABLE_TARGET "WIN32")
 endif()
 
 
@@ -25,7 +25,7 @@ add_subdirectory(
   EXCLUDE_FROM_ALL
 )
 
-# create mac executable
+# create executable
 add_executable(${APP_NAME} ${EXECUTABLE_TARGET} hello.c)
 
 # Link to the actual SDL3 library.
