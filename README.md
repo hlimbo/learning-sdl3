@@ -6,10 +6,6 @@
 git submodule update --init --recursive
 ```
 
-### Improvements
-[ ] Link SDL3.dll and add include headers to project to speed up build times (takes about ~5 minutes to finish compilation of SDL3 each time I want to try something out) Do for Windows
-[] Do above for Mac
-
 ## CMake 3.16 - Mac
 
 ### Prereqs
@@ -68,6 +64,36 @@ cmake --install platform_builds/windows --prefix "./dist/debug" --config Debug
 # release - creates a dist/release folder containing the game's .exe
 cmake --install platform_builds/windows --prefix "./dist/release" --config Release
 ```
+
+## Debugging
+### How to view CMake Dependency graph visually?
+```bash
+cmake -S . -B platform_builds/windows --graphviz=dist/dep_visualization/graph.dot
+```
+Related Documentation: https://cmake.org/cmake/help/latest/manual/cmake.1.html#cmdoption-cmake-graphviz
+
+To visualize the graph: install the following visual studio extension:
+```
+https://marketplace.visualstudio.com/items?itemName=ijmacd.graphviz-previewer-web
+```
+* To open preview, open the `.dot` file generated in the `dist/dep_visualization` folder and open the command palette and search for `Graphviz: Preview Dot File (Side)`
+
+This should be useful in visualizing dependencies as the project gets bigger
+
+Example files output will be generated in the `dist/dep_visualization` 
+folder
+
+
+```bash
+# this is the main dependency graph
+graph.dot
+# 
+graph.dot.*.dependers
+```
+
+### Example Graph
+![Dependency Graph Example](./graph_dependencies.png)
+
 
 ## Commands to run when in the `vendored/SDL` directory on command line
 

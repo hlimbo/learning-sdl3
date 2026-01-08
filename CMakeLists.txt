@@ -60,7 +60,12 @@ else()
   )
 
   if (SDL3_LIB)
-    target_link_libraries(${APP_NAME} PRIVATE "${SDL3_LIB}")
+    # mark library found as a STATIC library when generating graphviz file for visualizing dependencies
+    add_library(SDL3lib STATIC IMPORTED)
+    # give static lib a nickname for graphviz to label instead of labeling the full absolute path to the static library
+    set_target_properties(SDL3lib PROPERTIES IMPORTED_LOCATION "${SDL3_LIB}")
+
+    target_link_libraries(${APP_NAME} PRIVATE SDL3lib)
   else()
     message(FATAL_ERROR "Could not find SDL3 library file in ${SDL3_PATH}")
   endif()
@@ -86,8 +91,9 @@ endif()
 #            Shareable Builds Section                 #    
 #                                                     #
 #######################################################
-# on command line can enter commands such as:
+# The set of instructions below support commands such as:
 # cmake --build platform_builds/windows --config Release
+# More details of proper usage is documented in the README.md 
 
 install(TARGETS ${APP_NAME}
         RUNTIME DESTINATION .
