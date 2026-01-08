@@ -1,7 +1,92 @@
-### Getting Started
+# Getting Started
 ```bash
 # clone this repository
  git clone https://github.com/hlimbo/learning-sdl3.git
 # clone the `vendored/SDL` directory containing the SDL3 source code dependency
 git submodule update --init --recursive
+```
+
+### Improvements
+[ ] Link SDL3.dll and add include headers to project to speed up build times (takes about ~5 minutes to finish compilation of SDL3 each time I want to try something out) Do for Windows
+[] Do above for Mac
+
+## CMake 3.16 - Mac
+
+### Prereqs
+1. Install XCode and verify that the cmake command below uses clang as its compiler by running the `Configure CMake` command below (It should be the first 2 lines when it starts the configuration process)
+
+Example Output:
+```
+-- The C compiler identification is AppleClang 17.0.0.17000013
+-- The CXX compiler identification is AppleClang 17.0.0.17000013
+```
+
+### Build SDL3 from source - Mac
+**Note** Run these commands starting from the `learning-sdl3` folder as the root directory
+
+1. Configure CMake
+```bash
+cmake -S . -B build/build
+```
+
+2. Build CMake Project
+```bash
+cmake --build mac/build
+```
+
+3. If the build is good, you should see the app in:
+```
+mac/build/hello-mac.app
+```
+
+Can run the project by opening the `build` folder in Finder and double clicking on `hello-mac` to open the hello world program
+
+### Build SDL3 from source - Windows
+1. Configure CMake
+```bash
+cmake -S . -B windows/build
+```
+
+2. Build CMake Project
+```bash
+cmake --build windows/build
+```
+
+3. If build is successful, you should find `SDL3.dll` located in
+```
+vendored/SDL/build/debug/SDL3.dll
+```
+4. For the hello world app, it should be located in
+```
+windows/build/Debug/hello-windows.exe
+```
+
+## Commands to run when in the `vendored/SDL` directory on command line
+
+### Build `vendored/SDL` folder with Examples on
+```bash
+cd vendored/SDL
+cmake -S . -B build -D SDL_EXAMPLES=ON
+cmake --build build
+```
+
+* If build is good, you should find the `.exe` files in the following locations:
+
+#### Windows Executables Location
+```bash
+# applications should end in .exe
+vendored/SDL/build/examples/Debug
+```
+
+#### Mac Executables Location
+```bash
+# applications should end in .app
+vendored/SDL/build/examples
+```
+
+### Misc
+
+To view list of all CMAKE variables
+```
+cmake --help-variable-list
 ```
