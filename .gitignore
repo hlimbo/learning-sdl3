@@ -21,3 +21,4 @@ Release
 
 # Mac ignores
 .DS_Store
+*.app
