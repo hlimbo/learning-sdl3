@@ -4,7 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/vendored/SDL/include"
+                "${workspaceFolder}/dependencies/windows/SDL3/include"
             ],
             "defines": [
                 "_DEBUG",
@@ -21,7 +21,7 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/vendored/SDL/include"
+                "${workspaceFolder}/dependencies/mac/SDL3/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang++",
