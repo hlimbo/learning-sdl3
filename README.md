@@ -27,7 +27,7 @@ cmake -S . -B platform_builds/mac
 
 2. Build CMake Project
 ```bash
-cmake --build platform_builds/mac
+cmake --build platform_builds/mac --clean-first
 ```
 
 3. If the build is good, you should see the app in:
@@ -46,9 +46,9 @@ cmake -S . -B platform_builds/windows
 2. Build CMake Project
 ```bash
 # debug builds
-cmake --build platform_builds/windows --config Debug
+cmake --build platform_builds/windows --clean-first --config Debug
 # release builds
-cmake --build platform_builds/windows --config Release
+cmake --build platform_builds/windows --clean-first --config Release
 ```
 
 3. If build succeeded, hello world app should be located in:
@@ -74,7 +74,7 @@ Related Documentation: https://cmake.org/cmake/help/latest/manual/cmake.1.html#c
 
 To visualize the graph: install the following visual studio extension:
 ```
-https://marketplace.visualstudio.com/items?itemName=ijmacd.graphviz-previewer-web
+https://marketplace.visualstudio.com/items?itemName=tintinweb.graphviz-interactive-preview
 ```
 * To open preview, open the `.dot` file generated in the `dist/dep_visualization` folder and open the command palette and search for `Graphviz: Preview Dot File (Side)`
 

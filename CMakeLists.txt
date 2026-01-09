@@ -50,9 +50,35 @@ else()
       )
   endif()
 
-  add_executable(${APP_NAME} ${EXECUTABLE_TARGET} hello.c)
-  target_include_directories(${APP_NAME} PRIVATE "${SDL3_PATH}/include")
+  add_executable(${APP_NAME} ${EXECUTABLE_TARGET} "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 
+  # This forces the linker to use the Console subsystem on Windows
+  if(WIN32)
+      # have console open alongside application for debugging
+      set_target_properties(${APP_NAME} PROPERTIES 
+        LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE"
+        LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS"
+      )
+      # This ensures the entry point remains compatible with SDL3
+      target_compile_definitions(${APP_NAME} PRIVATE -D_CONSOLE)
+
+      # We also need to tell the linker to look for the right entry point symbol.
+      # SDL3 uses mainCRTStartup for console apps.
+      set_property(TARGET ${APP_NAME} APPEND_STRING PROPERTY 
+          LINK_FLAGS " /ENTRY:mainCRTStartup"
+      )
+  endif()
+
+  # add cpp files for this target to compile with
+  target_sources(
+    ${APP_NAME}
+    PRIVATE
+      src/print_hi.cpp
+  )
+
+  target_include_directories(${APP_NAME} PRIVATE "${SDL3_PATH}/include")
+  target_include_directories(${APP_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/include")
+  
   find_library(SDL3_LIB
     NAMES SDL3
     PATHS ${SDL3_PATH}
