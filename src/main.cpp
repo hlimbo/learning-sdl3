@@ -4,6 +4,7 @@
 
 #include <assert.h>
 #include <iostream>
+#include <stdio.h>
 
 #include "print_hi.h"
 
@@ -93,10 +94,14 @@ public:
 
   bool isOverlapping(const Rectangle& other)
   {
-    bool isXOverlap = position.x <= other.position.x && other.position.x <= position.x + dimension.x;
-    bool isYOverlap = position.y <= other.position.y && other.position.y <= position.y + dimension.y;
+    bool isXOverlap = 
+      position.x <= other.position.x + other.dimension.x && 
+      other.position.x <= position.x + dimension.x;
+    bool isYOverlap = 
+      position.y <= other.position.y + other.dimension.y && 
+      other.position.y <= position.y + dimension.y;
 
-    return isXOverlap || isYOverlap;
+    return isXOverlap && isYOverlap;
   }
 };
 
@@ -108,6 +113,9 @@ static bool isP1UpPressed = false;
 static bool isP1DownPressed = false;
 static bool isP2UpPressed = false;
 static bool isP2DownPressed = false;
+
+static int p1Score = 0;
+static int p2Score = 0;
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
@@ -131,6 +139,8 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
   paddle1.position = Vector2(20.0f, (SCREEN_HEIGHT - paddle1.dimension.y) * 0.5f);
   paddle2.position = Vector2(SCREEN_WIDTH - 40.0f, (SCREEN_HEIGHT - paddle1.dimension.y) * 0.5f);
   ball.position = Vector2((SCREEN_WIDTH - ball.dimension.x) * 0.5f, (SCREEN_HEIGHT - ball.dimension.y) * 0.5f);
+
+  ball.velocity = Vector2(2.0f, 2.0f);
 
   return SDL_APP_CONTINUE;
 }
@@ -192,8 +202,8 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
 // Runs every frame
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
-
-  Vector2 up(0.0f, PADDLE_SPEED);
+  // multiply by -1 because y coordinates are inverted
+  Vector2 up(0.0f, -PADDLE_SPEED);
   Vector2 down = -1.0f * up;
 
   // move logic
@@ -223,9 +233,42 @@ SDL_AppResult SDL_AppIterate(void* appstate)
     paddle2.velocity = Vector2(0.0f, 0.0f);
   }
 
-  // multiply by -1 because y coordinates are inverted
-  paddle1.position += paddle1.velocity * -1.0f;
-  paddle2.position += paddle2.velocity * -1.0f;
+  ball.position += ball.velocity;
+  
+  paddle1.position += paddle1.velocity;
+  paddle2.position += paddle2.velocity;
+
+  // naive check
+  if (paddle1.isOverlapping(ball))
+  {
+    ball.velocity.x *= -1.0f;
+  }
+  if (paddle2.isOverlapping(ball))
+  {
+    ball.velocity.x *= -1.0f;
+  }
+
+  // top and bottom bounds check
+  if (ball.position.y <= 0.0f || ball.position.y + ball.dimension.y >= SCREEN_HEIGHT)
+  {
+    ball.velocity.y *= -1.0f;
+  }
+
+  // left and right bounds edge check
+  if (ball.position.x <= 0.0f || ball.position.x + ball.dimension.x >= SCREEN_WIDTH)
+  {
+    ball.velocity.x *= -1.0f;
+  }
+
+  if (ball.position.x <= 0.0f)
+  {
+    p2Score += 1;
+  }
+
+  if (ball.position.x + ball.dimension.x >= SCREEN_WIDTH)
+  {
+    p1Score += 1;
+  }
 
 
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -240,6 +283,21 @@ SDL_AppResult SDL_AppIterate(void* appstate)
   };
   
   SDL_RenderRects(renderer, renderRects, 3);
+
+  float x1 = 80.0f;
+  float y1 = 20.0f;
+  char message1[256];
+  snprintf(message1, sizeof(message1), "P1: %d", p1Score);
+
+  float x2 = SCREEN_WIDTH - 160.0f;
+  float y2 = 20.0f;
+  char message2[256];
+  snprintf(message2, sizeof(message2), "P2: %d", p2Score);
+
+  SDL_RenderDebugText(renderer, x1, y1, message1);
+  SDL_RenderDebugText(renderer, x2, y2, message2);
+
+
 
   SDL_RenderPresent(renderer);
 
