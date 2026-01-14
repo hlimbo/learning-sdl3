@@ -2,6 +2,7 @@
 platform_builds/windows/*
 platform_builds/mac/*
 dist/*
+**/build/**
 
 # CMake Ignores
 cmake_install.cmake

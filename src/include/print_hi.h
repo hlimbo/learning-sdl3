@@ -1,5 +1,5 @@
 #ifndef INCLUDE_HI_CLASS
-#define INCLUDE_HIGH_CLASS
+#define INCLUDE_HI_CLASS
 
 
 namespace HiSpace

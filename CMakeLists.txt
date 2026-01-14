@@ -92,6 +92,15 @@ else()
     set_target_properties(SDL3lib PROPERTIES IMPORTED_LOCATION "${SDL3_LIB}")
 
     target_link_libraries(${APP_NAME} PRIVATE SDL3lib)
+
+    # add install path for libs for Mac only
+    if (APPLE)
+      set_target_properties("${APP_NAME}" PROPERTIES
+        BUILD_WITH_INSTALL_RPATH TRUE
+        INSTALL_RPATH "${SDL3_PATH}"
+      )
+    endif()
+
   else()
     message(FATAL_ERROR "Could not find SDL3 library file in ${SDL3_PATH}")
   endif()
@@ -107,6 +116,17 @@ else()
         "${SDL3_DLL_PATH}"
         "$<TARGET_FILE_DIR:${APP_NAME}>"
         COMMENT "Copying SDL3.dll to executable directory..."
+    )
+  endif()
+
+  # Add libSDL3.0.0dylib to Mac Builds after successful linking
+  if(APPLE)
+    set(SDL3_DLL_PATH "${SDL3_PATH}/libSDL3.0.dylib")
+    add_custom_command(TARGET ${APP_NAME} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+      "${SDL3_DLL_PATH}"
+      "$<TARGET_FILE_DIR:${APP_NAME}>"
+      COMMENT "Copying libSDL3.0.dylib to executable directory..."
     )
   endif()
 

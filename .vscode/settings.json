@@ -1,3 +1,4 @@
 {
-  "go.diagnostic.vulncheck": "Off"
+  "go.diagnostic.vulncheck": "Off",
+  "C_Cpp.default.compilerPath": "/usr/bin/clang++"
 }

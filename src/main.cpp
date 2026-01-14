@@ -117,15 +117,22 @@ static bool isP2DownPressed = false;
 static int p1Score = 0;
 static int p2Score = 0;
 
+// TODO: make game loop run frame rate independent so that different machines can see the same speeds objects move
+static Uint64 lastTime;
+static Uint64 currentTime;
+static float deltaTime = 0.0f;
+
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
+
 
 // Runs once on game startup
 // for appstate I can initialize it on the heap to add like OpenGL context
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
   HiSpace::printHi();
-  bool isCreated = SDL_CreateWindowAndRenderer("Hello World", SCREEN_WIDTH, SCREEN_HEIGHT, NULL, &window, &renderer);
+  SDL_WindowFlags windowFlags = (Uint64)NULL; // set no window flags
+  bool isCreated = SDL_CreateWindowAndRenderer("Hello World", SCREEN_WIDTH, SCREEN_HEIGHT, windowFlags, &window, &renderer);
   if (!isCreated)
   {
     SDL_Log("Couldn't create window and renderer: %s", SDL_GetError());
