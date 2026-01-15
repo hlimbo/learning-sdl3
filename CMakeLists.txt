@@ -52,6 +52,13 @@ else()
 
   add_executable(${APP_NAME} ${EXECUTABLE_TARGET} "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 
+  # add option from cmake command line to switch build to debug mode (used to display terminal alongside application)
+  if (APPLE)
+    set_target_properties(${APP_NAME} PROPERTIES
+      ${EXECUTABLE_TARGET} "$<NOT:$<CONFIG:Debug>>"
+    )
+  endif()
+
   # This forces the linker to use the Console subsystem on Windows
   if(WIN32)
       # have console open alongside application for debugging

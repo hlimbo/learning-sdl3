@@ -22,6 +22,10 @@ Example Output:
 
 1. Configure CMake
 ```bash
+# debug configuration
+cmake -S . -B platform_builds/mac -DCMAKE_BUILD_TYPE=Debug 
+
+# release configuration
 cmake -S . -B platform_builds/mac
 ```
 
