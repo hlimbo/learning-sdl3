@@ -213,6 +213,10 @@ SDL_AppResult SDL_AppIterate(void* appstate)
   Vector2 up(0.0f, -PADDLE_SPEED);
   Vector2 down = -1.0f * up;
 
+  Uint64 countsPerSec = SDL_GetPerformanceFrequency();
+
+  std::cout << "counts per second?? " << countsPerSec << std::endl;
+
   // move logic
   if (isP1UpPressed)
   {
@@ -321,3 +325,5 @@ void SDL_AppQuit(void* appstate, SDL_AppResult result)
   //SDL_DestroyRenderer(renderer);
   //SDL_DestroyWindow(window);
 }
+
+
