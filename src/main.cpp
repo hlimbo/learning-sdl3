@@ -117,14 +117,27 @@ static bool isP2DownPressed = false;
 static int p1Score = 0;
 static int p2Score = 0;
 
-// TODO: make game loop run frame rate independent so that different machines can see the same speeds objects move
+// measurement units used here: high resolution counter based on the processor's hardware counter
 static Uint64 lastTime;
 static Uint64 currentTime;
+
+// this depends on the computer's hardware counter which is in charge of 
+// providing high resolution counter
+// Different processors may output different counts per second and from
+// my own testing of 2 different kinds of computers, they return consistent counts per second frame by frame
+const static Uint64 COUNTS_PER_SECOND = SDL_GetPerformanceFrequency();
+
+#define TARGET_FPS 60.0f
+
+// measured in milliseconds per frame
+#define TARGET_DELTA_TIME ((float)SDL_MS_PER_SECOND / TARGET_FPS)
 static float deltaTime = 0.0f;
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
+#define BALL_SPEED 1000.0f
+#define PADDLE_SPEED 1000.0f
 
 // Runs once on game startup
 // for appstate I can initialize it on the heap to add like OpenGL context
@@ -147,7 +160,9 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
   paddle2.position = Vector2(SCREEN_WIDTH - 40.0f, (SCREEN_HEIGHT - paddle1.dimension.y) * 0.5f);
   ball.position = Vector2((SCREEN_WIDTH - ball.dimension.x) * 0.5f, (SCREEN_HEIGHT - ball.dimension.y) * 0.5f);
 
-  ball.velocity = Vector2(2.0f, 2.0f);
+  ball.velocity = Vector2(BALL_SPEED, BALL_SPEED);
+
+  deltaTime = TARGET_DELTA_TIME;
 
   return SDL_APP_CONTINUE;
 }
@@ -203,19 +218,16 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
   return SDL_APP_CONTINUE;
 }
 
-
-#define PADDLE_SPEED 4.0f
-
 // Runs every frame
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
+
+
+  lastTime = SDL_GetPerformanceCounter();
+
   // multiply by -1 because y coordinates are inverted
   Vector2 up(0.0f, -PADDLE_SPEED);
   Vector2 down = -1.0f * up;
-
-  Uint64 countsPerSec = SDL_GetPerformanceFrequency();
-
-  std::cout << "counts per second?? " << countsPerSec << std::endl;
 
   // move logic
   if (isP1UpPressed)
@@ -244,10 +256,13 @@ SDL_AppResult SDL_AppIterate(void* appstate)
     paddle2.velocity = Vector2(0.0f, 0.0f);
   }
 
-  ball.position += ball.velocity;
+
+  float dtSeconds = deltaTime / SDL_MS_PER_SECOND;
+
+  ball.position += ball.velocity * dtSeconds;
   
-  paddle1.position += paddle1.velocity;
-  paddle2.position += paddle2.velocity;
+  paddle1.position += paddle1.velocity * dtSeconds;
+  paddle2.position += paddle2.velocity * dtSeconds;
 
   // naive check
   if (paddle1.isOverlapping(ball))
@@ -312,6 +327,29 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 
   SDL_RenderPresent(renderer);
 
+  currentTime = SDL_GetPerformanceCounter();
+
+  // use absolute value to ensure Uint64 wraparound is handled
+  // might not realistically happen as an unsigned long on 64 bit systems
+  // is 2^64 max exclusive upper bound and having hardware count up that high will take A LONG TIME
+  Uint64 elapsedCount = lastTime > currentTime ?
+    (lastTime - currentTime) : (currentTime - lastTime);
+
+  deltaTime = SDL_MS_PER_SECOND * (float)elapsedCount / COUNTS_PER_SECOND;
+
+  std::cout << "target deltaTime: " << TARGET_DELTA_TIME << std::endl;
+  std::cout << "deltaTime: " << deltaTime << std::endl;
+  std::cout << "dtSeconds: " << dtSeconds << std::endl;
+
+  // IMPROVEMENT: to be more precise I can do a delay based on nanosecond granularity...
+
+  // if work this frame is finished earlier than the target deltaTime
+  // set a delay here to ensure all PCs operate at the same target FPS
+  if (deltaTime < TARGET_DELTA_TIME)
+  {
+    Uint32 delayMs = (Uint32)(TARGET_DELTA_TIME - deltaTime);
+    SDL_Delay(delayMs);
+  }
 
   return SDL_APP_CONTINUE;
 }
